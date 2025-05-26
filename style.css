@@ -1,0 +1,55 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 40px;
+}
+
+.context-target {
+  margin: 20px;
+  padding: 20px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.3s;
+}
+
+.context-target:hover {
+  background: #e0e0e0;
+}
+
+#contextMenuPlugin {
+  display: none;
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  z-index: 10000;
+  min-width: 180px;
+}
+
+#contextMenuPlugin ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#contextMenuPlugin li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#contextMenuPlugin li:hover {
+  background-color: #f7f7f7;
+}
+
+#contextMenuPlugin li span.icon {
+  width: 20px;
+  display: inline-block;
+  text-align: center;
+}

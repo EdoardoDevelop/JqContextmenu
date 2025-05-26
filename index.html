@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>jQuery Context Menu Plugin Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h2>Plugin jQuery: Menu contestuale dinamico</h2>
+
+  <div class="context-target" data-type="utente">👤 Utente</div>
+  <div class="context-target" data-type="file">📄 File</div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="jquery.contextMenuPlugin.js"></script>
+  <script>
+    $('.context-target').contextMenuPlugin({
+      getMenu: function ($el) {
+        const type = $el.data('type');
+        if (type === 'utente') {
+          return [
+            { label: 'Modifica', icon: '✏️', action: () => alert('Modifica Utente') },
+            { label: 'Elimina', icon: '🗑️', action: () => alert('Elimina Utente') }
+          ];
+        } else if (type === 'file') {
+          return [
+            { label: 'Apri', icon: '📂', action: () => alert('Apri File') },
+            { label: 'Scarica', icon: '⬇️', action: () => alert('Scarica File') }
+          ];
+        }
+        return [];
+      }
+    });
+  </script>
+</body>
+</html>
