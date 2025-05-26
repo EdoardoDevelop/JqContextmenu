@@ -6,9 +6,8 @@ Un plugin jQuery per creare menu contestuali personalizzabili che appaiono al cl
 
 * Crea un menu contestuale personalizzabile con elementi definiti dall'utente
 * Supporta click destro e lungo tocco su dispositivi touch
-* Menu posizionabile dinamicamente sulla pagina
 * Opzioni per personalizzare la durata del lungo tocco e il contenuto del menu
-* Compatibile con jQuery
+* Richiede jQuery
 
 ## Utilizzo
 
