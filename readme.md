@@ -30,6 +30,18 @@ $('#myElement').contextMenuPlugin({
   getMenu: function ($element) {
     return [
       { icon: '', label: 'Azioni', action: ($target) => console.log('Azioni') },
+      {
+        label: 'Elimina',
+        icon: '🗑️',
+        confirm: 'Sei sicuro di voler eliminare questo elemento?',
+        actionToServer: {
+          url: '/api/delete',
+          method: 'POST',
+          data: el => ({ id: el.data('id') }),
+          onSuccess: () => alert('Eliminato con successo!'),
+          onError:   () => alert('Errore durante l\'eliminazione')
+        }
+      },
       { separator: true },
       { icon: '', label: 'Proprietà', action: (target) => console.log('Proprietà') }
     ];

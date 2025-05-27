@@ -31,7 +31,18 @@
           return [
             { label: 'Modifica', icon: '✏️', action: () => alert('Modifica Utente') },
             { separator: true },
-            { label: 'Elimina', icon: '🗑️', action: () => alert('Elimina Utente') }
+            {
+              label: 'Elimina',
+              icon: '🗑️',
+              confirm: 'Sei sicuro di voler eliminare questo elemento?',
+              actionToServer: {
+                url: '/api/delete',
+                method: 'POST',
+                data: el => ({ id: el.data('id') }),
+                onSuccess: () => alert('Eliminato con successo!'),
+                onError:   () => alert('Errore durante l\'eliminazione')
+              }
+            }
           ];
         } else if (type === 'file') {
           return [
