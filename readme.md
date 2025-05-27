@@ -26,8 +26,8 @@ Un plugin jQuery per creare menu contestuali personalizzabili che appaiono al cl
 $('#myElement').contextMenuPlugin({
   getMenu: function ($element) {
     return [
-      { icon: '', label: 'Azioni', action: () => console.log('Azioni') },
-      { icon: '', label: 'Proprietà', action: () => console.log('Proprietà') }
+      { icon: '', label: 'Azioni', action: ($target) => console.log('Azioni') },
+      { icon: '', label: 'Proprietà', action: (target) => console.log('Proprietà') }
     ];
   },
   longPressDuration: 800
