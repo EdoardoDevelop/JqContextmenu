@@ -43,7 +43,7 @@ $('#myElement').contextMenuPlugin({
         }
       },
       { separator: true },
-      { icon: '', label: 'Proprietà', action: (target) => console.log('Proprietà') }
+      { icon: '', label: 'Proprietà', action: ($target) => console.log('Proprietà') }
     ];
   },
   longPressDuration: 800,
