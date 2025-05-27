@@ -30,7 +30,7 @@ $('#myElement').contextMenuPlugin({
   getMenu: function ($element) {
     return [
       //elemento semplice
-      { icon: '', label: 'Azioni', action: ($target) => console.log('Azioni') },
+      { icon: '📝', label: 'Azioni', action: ($target) => console.log('Azioni') },
       //action ajax al click
       {
         label: 'Elimina',
@@ -48,7 +48,7 @@ $('#myElement').contextMenuPlugin({
       {
         label: 'Attiva notifica',
         type: 'checkbox',
-        checked: $el.data('notify-enabled') === true,
+        checked: $element.data('notify-enabled') === true,
         onChange: function ($el, checked) {
           console.log('Notifica attiva:', checked);
           $el.data('notify-enabled', checked); // aggiorna stato locale
