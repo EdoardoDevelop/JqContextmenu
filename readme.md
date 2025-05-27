@@ -31,7 +31,7 @@ $('#myElement').contextMenuPlugin({
     return [
       { icon: '', label: 'Azioni', action: ($target) => console.log('Azioni') },
       { separator: true },
-      { icon: '', label: 'Proprietà', action: (target) => console.log('Proprietà') }
+      { icon: '', label: 'Proprietà', action: ($target) => console.log('Proprietà') }
     ];
   },
   longPressDuration: 800,
