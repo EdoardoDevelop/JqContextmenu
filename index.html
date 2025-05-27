@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
   <meta charset="UTF-8">
   <title>jQuery Context Menu Plugin Demo</title>
@@ -12,6 +13,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <h2>Plugin jQuery: Menu contestuale dinamico</h2>
@@ -28,6 +30,7 @@
         if (type === 'utente') {
           return [
             { label: 'Modifica', icon: '✏️', action: () => alert('Modifica Utente') },
+            { separator: true },
             { label: 'Elimina', icon: '🗑️', action: () => alert('Elimina Utente') }
           ];
         } else if (type === 'file') {
@@ -37,8 +40,18 @@
           ];
         }
         return [];
+      },
+      onShow: function ($target, items) {
+        console.log('Menu mostrato su:', $target);
+      },
+      onHide: function () {
+        console.log('Menu nascosto');
+      },
+      onItemClick: function ($target, item) {
+        console.log('Cliccato:', item.label);
       }
     });
   </script>
 </body>
+
 </html>

@@ -30,7 +30,7 @@
   padding: 0;
 }
 
-#contextMenuPlugin li {
+#contextMenuPlugin li:not(.separator) {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -39,7 +39,7 @@
   transition: background 0.2s;
 }
 
-#contextMenuPlugin li:hover {
+#contextMenuPlugin li:not(.separator):hover {
   background-color: #f7f7f7;
 }
 
