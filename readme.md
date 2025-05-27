@@ -29,7 +29,9 @@ Un plugin jQuery per creare menu contestuali personalizzabili che appaiono al cl
 $('#myElement').contextMenuPlugin({
   getMenu: function ($element) {
     return [
+      //elemento semplice
       { icon: '', label: 'Azioni', action: ($target) => console.log('Azioni') },
+      //action ajax al click
       {
         label: 'Elimina',
         icon: '🗑️',
@@ -42,8 +44,31 @@ $('#myElement').contextMenuPlugin({
           onError:   () => alert('Errore durante l\'eliminazione')
         }
       },
+      //checkbox e action ajax al cambio di stato
+      {
+        label: 'Attiva notifica',
+        type: 'checkbox',
+        checked: $el.data('notify-enabled') === true,
+        onChange: function ($el, checked) {
+          console.log('Notifica attiva:', checked);
+          $el.data('notify-enabled', checked); // aggiorna stato locale
+        },
+        actionToServer: {
+          url: '/api/toggle-notifica',
+          method: 'POST',
+          data: function ($el, checked) {
+            return {
+              id: $el.data('id'),
+              enabled: checked
+            };
+          },
+          onSuccess: function (res, $el, checked) {
+            console.log('Salvato sul server:', res);
+          }
+        }
+      },
+      //separatore
       { separator: true },
-      { icon: '', label: 'Proprietà', action: ($target) => console.log('Proprietà') }
     ];
   },
   longPressDuration: 800,

@@ -1,7 +1,7 @@
 /*
  * Context menu plugin for jQuery
  *
- * Copyright (c) 2019, Edoardo Monti
+ * Copyright (c) 2025, Edoardo Monti
  * Licensed under the MIT License
  * https://github.com/EdoardoDevelop/JqContextmenu
  */
@@ -16,7 +16,6 @@
       onItemClick: function ($target, item) {}
     }, options);
 
-    /* ---- evita duplicati ---- */
     let $menu = $('#contextMenuPlugin');
     if ($menu.length === 0) {
       $('body').append('<div id="contextMenuPlugin" style="position:absolute;display:none;z-index:9999"><ul></ul></div>');
@@ -25,8 +24,7 @@
     const $menuList = $menu.find('ul');
     let longPressTimer;
 
-    /* ---------- helpers ---------- */
-    function showMenu (e, $target) {
+    function showMenu(e, $target) {
       e.preventDefault();
 
       const items = settings.getMenu($target);
@@ -41,71 +39,111 @@
         }
 
         const $li = $('<li style="cursor:pointer; padding:5px 10px;"></li>');
-        $li.append(`<span class="icon">${item.icon || ''}</span> `)
-           .append(`<span class="label">${item.label}</span>`);
 
-        $li.on('click', function (ev) {
-          ev.stopPropagation();
+        // Checkbox type
+        if (item.type === 'checkbox') {
+          const checkboxId = `checkbox_${Math.random().toString(36).substr(2, 9)}`;
+          const $checkbox = $(`
+            <label for="${checkboxId}" style="cursor:pointer; display:flex; align-items:center;">
+              <input type="checkbox" id="${checkboxId}" ${item.checked ? 'checked' : ''} style="margin-right:8px;" />
+              ${item.label}
+            </label>
+          `);
 
-          /* --- conferma opzionale --- */
-          if (item.confirm && !window.confirm(item.confirm)) return;
+          $checkbox.find('input').on('change', function (e) {
+            e.stopPropagation();
+            const checked = $(this).is(':checked');
 
-          /* --- azione locale --- */
-          if (typeof item.action === 'function') {
-            item.action($target);
-          }
+            if (typeof item.onChange === 'function') {
+              item.onChange($target, checked);
+            }
 
-          /* --- azione server (AJAX) --- */
-          if (item.actionToServer) {
-            const req = item.actionToServer;
-            const dataPayload = typeof req.data === 'function' ? req.data($target) : req.data;
+            if (item.actionToServer) {
+              const req = item.actionToServer;
+              const dataPayload = typeof req.data === 'function'
+                ? req.data($target, checked)
+                : { ...req.data, checked };
 
-            $.ajax({
-              url: req.url,
-              method: req.method || 'GET',
-              data: dataPayload,
-              success: function (response) {
-                if (typeof req.onSuccess === 'function') req.onSuccess(response, $target);
-              },
-              error: function (xhr, status, error) {
-                if (typeof req.onError === 'function') req.onError(error, $target);
-              }
-            });
-          }
+              $.ajax({
+                url: req.url,
+                method: req.method || 'POST',
+                data: dataPayload,
+                success: function (response) {
+                  if (typeof req.onSuccess === 'function') req.onSuccess(response, $target, checked);
+                },
+                error: function (xhr, status, error) {
+                  if (typeof req.onError === 'function') req.onError(error, $target, checked);
+                }
+              });
+            }
+          });
 
-          /* --- callback globale e chiusura --- */
-          settings.onItemClick?.($target, item);
-          hideMenu();
-        });
+          $li.append($checkbox);
+        } else {
+          // Normal item
+          $li.append(`<span class="icon">${item.icon || ''}</span> `)
+             .append(`<span class="label">${item.label}</span>`);
+
+          $li.on('click', function (ev) {
+            ev.stopPropagation();
+
+            if (item.confirm && !window.confirm(item.confirm)) return;
+
+            if (typeof item.action === 'function') {
+              item.action($target);
+            }
+
+            if (item.actionToServer) {
+              const req = item.actionToServer;
+              const dataPayload = typeof req.data === 'function'
+                ? req.data($target)
+                : req.data;
+
+              $.ajax({
+                url: req.url,
+                method: req.method || 'GET',
+                data: dataPayload,
+                success: function (response) {
+                  if (typeof req.onSuccess === 'function') req.onSuccess(response, $target);
+                },
+                error: function (xhr, status, error) {
+                  if (typeof req.onError === 'function') req.onError(error, $target);
+                }
+              });
+            }
+
+            settings.onItemClick?.($target, item);
+            hideMenu();
+          });
+        }
 
         $menuList.append($li);
       });
 
-      /* ---- posizionamento con controllo overflow ---- */
+      // Posizionamento intelligente
       const menuWidth  = $menu.outerWidth();
       const menuHeight = $menu.outerHeight();
       const winWidth   = $(window).width();
       const winHeight  = $(window).height();
-      let x = e.pageX,
-          y = e.pageY;
+      let x = e.pageX, y = e.pageY;
 
-      if (x + menuWidth  > winWidth)  x = winWidth  - menuWidth  - 10;
+      if (x + menuWidth > winWidth) x = winWidth - menuWidth - 10;
       if (y + menuHeight > winHeight) y = winHeight - menuHeight - 10;
 
       $menu.css({ top: y, left: x }).fadeIn(150);
       settings.onShow?.($target, items);
     }
 
-    function hideMenu () {
+    function hideMenu() {
       $menu.fadeOut(100, settings.onHide);
     }
 
-    /* ---------- bindings globali ---------- */
+    // Global bindings
     $(document).on('click touchstart', hideMenu);
     $menu.on('click touchstart', e => e.stopPropagation());
     $(window).on('scroll resize', hideMenu);
 
-    /* ---------- binding per ogni elemento ---------- */
+    // Element bindings
     return this.each(function () {
       const $el = $(this);
 
