@@ -24,7 +24,8 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="jquery.contextMenuPlugin.js"></script>
   <script>
-    $('.context-target').contextMenuPlugin({
+    $(document).contextMenuPlugin({
+    delegate: '.context-target',
       getMenu: function ($el) {
         const type = $el.data('type');
         if (type === 'utente') {
