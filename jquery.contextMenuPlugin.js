@@ -9,6 +9,7 @@
 (function ($) {
   $.fn.contextMenuPlugin = function (options) {
     const settings = $.extend({
+      delegate: null, // <- nuovo: selettore per il delegation
       getMenu: function ($element) { return []; },
       longPressDuration: 600,
       onShow: function ($target, items) {},
@@ -40,7 +41,6 @@
 
         const $li = $('<li style="cursor:pointer; padding:5px 10px;"></li>');
 
-        // Checkbox type
         if (item.type === 'checkbox') {
           const checkboxId = `checkbox_${Math.random().toString(36).substr(2, 9)}`;
           const $checkbox = $(`
@@ -80,7 +80,6 @@
 
           $li.append($checkbox);
         } else {
-          // Normal item
           $li.append(`<span class="icon">${item.icon || ''}</span> `)
              .append(`<span class="label">${item.label}</span>`);
 
@@ -120,7 +119,6 @@
         $menuList.append($li);
       });
 
-      // Posizionamento intelligente
       const menuWidth  = $menu.outerWidth();
       const menuHeight = $menu.outerHeight();
       const winWidth   = $(window).width();
@@ -138,29 +136,34 @@
       $menu.fadeOut(100, settings.onHide);
     }
 
-    // Global bindings
     $(document).on('click touchstart', hideMenu);
     $menu.on('click touchstart', e => e.stopPropagation());
     $(window).on('scroll resize', hideMenu);
 
-    // Element bindings
-    return this.each(function () {
-      const $el = $(this);
+    // Delegation binding
+    const $context = this;
 
-      $el.off('contextmenu.contextMenuPlugin')
-         .on('contextmenu.contextMenuPlugin', e => showMenu(e, $el));
+    if (settings.delegate) {
+      // Delegated events
+      $context.off('contextmenu.contextMenuPlugin')
+              .on('contextmenu.contextMenuPlugin', settings.delegate, function (e) {
+                showMenu(e, $(this));
+              });
 
-      $el.off('touchstart.contextMenuPlugin')
-         .on('touchstart.contextMenuPlugin', e => {
-           longPressTimer = setTimeout(() => {
-             showMenu(e.originalEvent.touches[0], $el);
-           }, settings.longPressDuration);
-         });
+      $context.off('touchstart.contextMenuPlugin')
+              .on('touchstart.contextMenuPlugin', settings.delegate, function (e) {
+                const $el = $(this);
+                longPressTimer = setTimeout(() => {
+                  showMenu(e.originalEvent.touches[0], $el);
+                }, settings.longPressDuration);
+              });
 
-      $el.off('touchend.contextMenuPlugin touchmove.contextMenuPlugin')
-         .on('touchend.contextMenuPlugin touchmove.contextMenuPlugin', () => {
-           clearTimeout(longPressTimer);
-         });
-    });
+      $context.off('touchend.contextMenuPlugin touchmove.contextMenuPlugin')
+              .on('touchend.contextMenuPlugin touchmove.contextMenuPlugin', settings.delegate, () => {
+                clearTimeout(longPressTimer);
+              });
+    }
+
+    return this;
   };
 })(jQuery);
