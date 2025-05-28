@@ -14,7 +14,7 @@ Un plugin jQuery per creare menu contestuali personalizzabili che appaiono al cl
 1. Includi il plugin nel tuo progetto
 2. Seleziona gli elementi che dovrebbero attivare il menu contestuale
 3. Inizializza il plugin chiamando `$(document).contextMenuPlugin(options)`
-4. Inizializza il plugin chiamando `$(selector).contextMenuPlugin('destroy')`
+4. Distruggi il plugin chiamando `$(selector).contextMenuPlugin('destroy')`
 
 ## Opzioni
 
