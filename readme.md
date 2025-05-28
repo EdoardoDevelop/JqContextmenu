@@ -18,6 +18,7 @@ Un plugin jQuery per creare menu contestuali personalizzabili che appaiono al cl
 ## Opzioni
 
 * `getMenu`: funzione che restituisce gli elementi del menu
+* `delegate`: selettore per delegare l'attivazione del menu contestuale a elementi figli
 * `longPressDuration`: durata del lungo tocco in millisecondi
 * `onShow`: evento che viene eseguito quando il menu viene mostrato
 * `onHide`: evento che viene eseguito quando il menu viene nascosto
@@ -26,7 +27,8 @@ Un plugin jQuery per creare menu contestuali personalizzabili che appaiono al cl
 ## Esempio
 
 ```javascript
-$('#myElement').contextMenuPlugin({
+$(document).contextMenuPlugin({
+  delegate: '#myElement',
   getMenu: function ($element) {
     return [
       //elemento semplice
